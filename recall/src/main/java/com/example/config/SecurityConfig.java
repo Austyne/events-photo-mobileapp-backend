@@ -92,18 +92,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
         final var configuration = new CorsConfiguration();
-        final var allowedOrigins = corsProperties.allowedOrigins().stream().map(URL::toString).toList();
-        final var allowedMethods = corsProperties.allowedMethods();
-        final var allowedHeaders = corsProperties.allowedHeaders();
-        log.info("Allowed Origins: {}", allowedOrigins);
 
-        // Use allowedOriginPatterns instead of allowedOrigins to support mobile apps
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        // Allow everything for CORS - no restrictions
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("*");
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
+
         final var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
