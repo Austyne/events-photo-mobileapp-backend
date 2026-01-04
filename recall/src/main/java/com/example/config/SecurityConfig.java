@@ -77,6 +77,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
                         .requestMatchers("/users/login", "/users/signup", "/users/**").permitAll()
                         .requestMatchers("/events", "/events/**").permitAll()
                         .requestMatchers("/friends/**", "/status", "/reset-database").permitAll()
