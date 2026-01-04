@@ -3,6 +3,7 @@ package com.example.config;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -94,9 +95,13 @@ public class SecurityConfig {
         final var allowedMethods = corsProperties.allowedMethods();
         final var allowedHeaders = corsProperties.allowedHeaders();
         log.info("Allowed Origins: {}", allowedOrigins);
-        configuration.setAllowedOrigins(allowedOrigins);
+
+        // Use allowedOriginPatterns instead of allowedOrigins to support mobile apps
+        configuration.setAllowedOriginPatterns(List.of("*"));
         configuration.setAllowedMethods(allowedMethods);
         configuration.setAllowedHeaders(allowedHeaders);
+        configuration.setAllowCredentials(corsProperties.allowCredentials());
+        configuration.setExposedHeaders(List.of("Authorization"));
         final var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -144,7 +149,5 @@ public class SecurityConfig {
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 
 }
