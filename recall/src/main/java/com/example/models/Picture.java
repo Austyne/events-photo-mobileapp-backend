@@ -20,12 +20,15 @@ public class Picture {
 
     private String hashtags;
 
+    private String createdBy; // username of creator/owner
+
     protected Picture() {
     }
 
-    public Picture(String url, String hashtags) {
+    public Picture(String url, String hashtags, String createdBy) {
         this.url = url;
         this.hashtags = hashtags;
+        this.createdBy = createdBy;
     }
 
     public long getId() {
@@ -51,6 +54,14 @@ public class Picture {
 
     public void setHashtags(String hashtags) {
         this.hashtags = hashtags;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public List<String> getHashtagsList() {

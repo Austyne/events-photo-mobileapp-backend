@@ -38,10 +38,15 @@ public class EventController {
 
     @PostMapping("/{event}/add-picture")
     public void addPictureToEvent(@PathVariable("event") String eventName,
-                                @RequestBody PictureRequest request) {
-        eventService.addPictureToEvent(eventName, request.getUrl());
+            @RequestBody PictureRequest request,
+            Authentication authentication) {
+        final String username = authentication != null ? authentication.getName() : null;
+        try {
+            eventService.addPictureToEvent(eventName, request.getUrl(), username);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 
     @PostMapping("/{eventName}/join")
     public void addCurrentUserToEvent(@PathVariable String eventName, @RequestBody String username) {

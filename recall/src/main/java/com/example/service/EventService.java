@@ -32,9 +32,9 @@ public class EventService {
         eventRepository.save(newEvent);
     }
 
-    public void addPictureToEvent(String eventName, String pictureUrl) {
+    public void addPictureToEvent(String eventName, String pictureUrl, String createdByUsername) {
         Event event = eventRepository.findByName(eventName);
-        Picture picture = new Picture(pictureUrl, "");
+        Picture picture = new Picture(pictureUrl, "", createdByUsername);
         if (event != null) {
             event.getPictures().add(picture);
             eventRepository.save(event);
