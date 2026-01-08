@@ -131,4 +131,8 @@ public class Event {
         return location;
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }

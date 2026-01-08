@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 
 import com.example.controller.dto.PictureRequest;
 import com.example.models.Event;
+import com.example.controller.dto.EventCreateRequest;
 import com.example.service.EventService;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/events")
@@ -30,10 +33,9 @@ public class EventController {
     }
 
     @PostMapping()
-    public void createEvent(@RequestBody Event entityData) {
-
-        eventService.createEvent(entityData);
-
+    public void createEvent(@Valid @RequestBody EventCreateRequest entityData, Authentication authentication) {
+        final String username = authentication != null ? authentication.getName() : null;
+        eventService.createEvent(entityData, username);
     }
 
     @PostMapping("/{event}/add-picture")
@@ -51,6 +53,12 @@ public class EventController {
     @PostMapping("/{eventName}/join")
     public void addCurrentUserToEvent(@PathVariable String eventName, @RequestBody String username) {
         eventService.addCurrentUserToEvent(eventName, username);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteEvent(@PathVariable("id") Long id, Authentication authentication) {
+        final String username = authentication != null ? authentication.getName() : null;
+        eventService.deleteEventByIdForUser(id, username);
     }
 
 }

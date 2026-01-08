@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.models.Event;
 import com.example.models.Picture;
 import com.example.repository.EventRepository;
+import com.example.controller.dto.EventCreateRequest;
 
 @Service
 public class EventService {
@@ -26,9 +27,17 @@ public class EventService {
 
     }
 
-    public void createEvent(Event eventdata) {
-        Event newEvent = new Event(eventdata.getName(), eventdata.getDate(), eventdata.getHostName(),
-                eventdata.getStartTime(), eventdata.getEndTime(), eventdata.getLocation());
+    public void createEvent(EventCreateRequest eventdata, String creatorUsername) {
+        if (creatorUsername == null || creatorUsername.isBlank()) {
+            throw new RuntimeException("Authentication required to create an event");
+        }
+        Event newEvent = new Event(
+                eventdata.name(),
+                eventdata.date(),
+                creatorUsername,
+                eventdata.startTime(),
+                eventdata.endTime(),
+                eventdata.location());
         eventRepository.save(newEvent);
     }
 
@@ -47,6 +56,20 @@ public class EventService {
             event.getUsernames().add(username);
             eventRepository.save(event);
         }
+    }
+
+    public void deleteEventByIdForUser(Long eventId, String username) {
+        if (username == null || username.isBlank()) {
+            throw new RuntimeException("Authentication required to delete an event");
+        }
+        final var event = eventRepository.findById(eventId).orElse(null);
+        if (event == null) {
+            throw new RuntimeException("Event not found");
+        }
+        if (!username.equals(event.getHostName())) {
+            throw new RuntimeException("You are not allowed to delete this event");
+        }
+        eventRepository.deleteById(eventId);
     }
 
 }
