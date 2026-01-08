@@ -78,8 +78,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
-                        .requestMatchers("/users/login", "/users/signup", "/users/**").permitAll()
-                        .requestMatchers("/events", "/events/**").permitAll()
+                        .requestMatchers("/users/login", "/users/signup").permitAll()
+                        // .requestMatchers("/events", "/events/**").permitAll()
                         .requestMatchers("/friends/**", "/status", "/reset-database").permitAll()
                         .requestMatchers("/error/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
