@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.access.AccessDeniedException;
 import com.example.models.Picture;
 import com.example.repository.PictureRepository;
+import com.example.controller.PictureNotFoundException;
 
 @Service
 public class PictureService {
@@ -36,10 +38,11 @@ public class PictureService {
 
     }
 
+    @Transactional
     public void deletePictureIfOwner(Long id, String username) {
         final Optional<Picture> pictureOpt = picturesRepository.findById(id);
         if (pictureOpt.isEmpty()) {
-            throw new RuntimeException("Picture not found");
+            throw new PictureNotFoundException("Picture not found with ID: " + id);
         }
         final Picture picture = pictureOpt.get();
         if (username == null || picture.getCreatedBy() == null || !username.equals(picture.getCreatedBy())) {

@@ -55,10 +55,10 @@ public class EventController {
         eventService.addCurrentUserToEvent(eventName, username);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable("id") Long id, Authentication authentication) {
+    @DeleteMapping("/{name}")
+    public void deleteEvent(@PathVariable("name") String name, Authentication authentication) {
         final String username = authentication != null ? authentication.getName() : null;
-        eventService.deleteEventByIdForUser(id, username);
+        eventService.deleteEventByNameForUser(name, username);
     }
 
 }

@@ -3,16 +3,19 @@ package com.example.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.models.Event;
 import com.example.models.Picture;
 import com.example.repository.EventRepository;
+
 import com.example.controller.dto.EventCreateRequest;
 
 @Service
 public class EventService {
 
     final EventRepository eventRepository;
+
 
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -38,6 +41,9 @@ public class EventService {
                 eventdata.startTime(),
                 eventdata.endTime(),
                 eventdata.location());
+        
+        newEvent.getUsernames().add(creatorUsername);
+        
         eventRepository.save(newEvent);
     }
 
@@ -58,18 +64,19 @@ public class EventService {
         }
     }
 
-    public void deleteEventByIdForUser(Long eventId, String username) {
+    @Transactional
+    public void deleteEventByNameForUser(String eventName, String username) {
         if (username == null || username.isBlank()) {
             throw new RuntimeException("Authentication required to delete an event");
         }
-        final var event = eventRepository.findById(eventId).orElse(null);
+        final var event = eventRepository.findByName(eventName);
         if (event == null) {
             throw new RuntimeException("Event not found");
         }
         if (!username.equals(event.getHostName())) {
             throw new RuntimeException("You are not allowed to delete this event");
         }
-        eventRepository.deleteById(eventId);
+        eventRepository.deleteByName(eventName);
     }
 
 }

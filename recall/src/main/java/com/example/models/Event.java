@@ -1,5 +1,6 @@
 package com.example.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -61,8 +62,8 @@ public class Event {
         setStartTime(startTime);
         setName(name);
         setHostName(hostName);
-        this.pictures = List.of();
-        this.usernames = List.of();
+        this.pictures = new ArrayList<>();
+        this.usernames = new ArrayList<>();
         setLocation(location);
 
     }
