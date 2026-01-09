@@ -58,7 +58,10 @@ public class UserService {
     }
 
     public User signup(UserInput userInput) {
+        log.info("Attempting to create user with username: {}", userInput.username());
+
         if (userRepository.existsByUsername(userInput.username())) {
+            log.error("Signup failed - Username already exists: {}", userInput.username());
             throw new RuntimeException("Username is already in use.");
         }
 
@@ -70,7 +73,9 @@ public class UserService {
                 userInput.email(),
                 hashedPassword);
 
-        return userRepository.save(user);
+        final var savedUser = userRepository.save(user);
+        log.info("User created successfully: {}", savedUser.getUsername());
+        return savedUser;
     }
 
 }

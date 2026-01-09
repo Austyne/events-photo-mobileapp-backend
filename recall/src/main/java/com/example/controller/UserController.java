@@ -43,6 +43,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public User signup(@Valid @RequestBody UserInput userInput) {
+        log.info("Signup request received - Username: {}, Email: {}, FirstName: {}, LastName: {}",
+                userInput.username(), userInput.email(), userInput.firstName(), userInput.lastName());
         return userService.signup(userInput);
     }
 
